@@ -15,11 +15,11 @@ p.addParamValue('mua',[]);
 p.addParamValue('stillThresh',[]);
 p.addParamValue('velocity_state_optional_args',cell(0));
 % Theta-delta ratio
-p.addParamValue('tdrSWSThresh',0.5);
-p.addParamValue('tdrDeepSWSThresh',0.4);
+p.addParamValue('tdrSWSThresh',1);
+p.addParamValue('tdrDeepSWSThresh',0.75);
 p.addParamValue('tdrREMThresh',1.0);
 p.addParamValue('tdrMaxBridge',1);
-p.addParamValue('tdrMinLength',10);
+p.addParamValue('tdrMinLength',20);
 p.addParamValue('tdr_optional_args',cell(0));
 
 p.parse(varargin{:});
@@ -43,16 +43,17 @@ sleepEpochs = gh_union_segs(epochMap('sleep1'),epochMap('sleep2'));
 
 % Theta/Delta ratio
 tdr = theta_delta_ratio(eeg,opt.tdr_optional_args{:});
+tdr.data = mean(tdr.data,2);
 
 SWSCand = gh_signal_to_segs(tdr, seg_criterion('cutoff_value',opt.tdrSWSThresh,...
     'bridge_max_gap',opt.tdrMaxBridge,...
-    'min_width_post_bridge',opt.tdrMinLength,'thresh_is_positive',false));
+    'min_width_post_bridge',opt.tdrMinLength,'threshold_is_positive',false));
 state('sws') = gh_intersection_segs(SWSCand, sleepEpochs);
 
 DeepSWSCand = gh_signal_to_segs( tdr, ...
     seg_criterion('cutoff_value', opt.tdrDeepSWSThresh,...
     'bridge_max_gap',opt.tdrMaxBridge, 'min_width_post_bridge',opt.tdrMinLength,...
-    'thresh_is_positive',false));
+    'threshold_is_positive',false));
 state('deepsws') = gh_intersection_segs(DeepSWSCand, sleepEpochs);
 
 REMCand = gh_signal_to_segs( tdr, ...

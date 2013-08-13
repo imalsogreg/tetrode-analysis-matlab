@@ -1,15 +1,15 @@
 function [dips, frames] = find_dips_frames(mua_rate,varargin)
 
 p = inputParser();
-p.addParamValue('mean_rate_threshold', 65);
+p.addParamValue('mean_rate_threshold', 40);
 p.addParamValue('frame_length_range', [0.01 3]);
 p.addParamValue('draw',false);
 p.parse(varargin{:});
 opt = p.Results;
 
 dip_crit = seg_criterion('cutoff_value', opt.mean_rate_threshold,...
-    'thresh_is_positive',false,...
-    'bridge_max_gap',0,'min_width_pre_bridge',0.05);
+    'threshold_is_positive',false,...
+    'bridge_max_gap',0,'min_width_pre_bridge',0.03);
 
 mua_mean = mua_rate;
 mua_mean.data = mean(double(mua_mean.data),2); % Somehow input data was single

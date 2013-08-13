@@ -79,9 +79,10 @@ keep_bool = cellfun(@(x) dt*diff(x) >= seg_crit.min_width_post_bridge, s);
 s = s(keep_bool);
 
 % Split segs with an 'adequate local min'
-minPeakDistSamps = seg_crit.min_peak_dist * cdat.samplerate;
-s = gh_split_segs_at_trough(d,s,seg_crit.adequate_local_min, anticmp, antiextreme,minPeakDistSamps,seg_crit.peak_min);
-
+if(~isempty(seg_crit.adequate_local_min))
+    minPeakDistSamps = seg_crit.min_peak_dist * cdat.samplerate;
+    s = gh_split_segs_at_trough(d,s,seg_crit.adequate_local_min, anticmp, antiextreme,minPeakDistSamps,seg_crit.peak_min);
+end
 
 seg = cellfun(@(x) [ts(x(1)), ts(x(2))], s,'UniformOutput',false);
 
