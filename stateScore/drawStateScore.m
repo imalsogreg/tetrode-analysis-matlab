@@ -6,7 +6,11 @@ p.parse(varargin{:});
 opt = p.Results;
 
 ax(1) = subplot(3,1,1);
+if(~isempty(eeg));
 f = gh_plot_cont(eeg);
+else
+f = plot([0,0],[0,0]);
+end
 hold on;
 
 vCdat = velocity_cdat(pfilename,opt.efilename);

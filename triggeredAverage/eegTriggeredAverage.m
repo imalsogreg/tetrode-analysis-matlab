@@ -2,6 +2,7 @@ function trigCdat = eegTriggeredAverage(inCdat, trigTimes, timeWin)
 
 trigCdat = inCdat;
 
+
 trigOkWindow = [inCdat.tstart - timeWin(1), inCdat.tend - timeWin(2)];
 trigTimes = trigTimes( trigTimes >= trigOkWindow(1) & trigTimes <= trigOkWindow(2) );
 
@@ -16,19 +17,21 @@ dt = 1/inCdat.samplerate;
 trigTS = (timeWin(1):dt:timeWin(2))';
 nNewSamp = numel(trigTS);
 
+trigCdat.data = zeros(nNewSamp,nChan);
+trigCdat.variance = trigCdat.data;
+
 trigTimes = reshape(trigTimes,1,[]);
 
 trigInterpTimes = bsxfun(@plus, trigTS, trigTimes);
 
-trigCdat.data = zeros(nNewSamp,nChan); % right-sized placeholder
-
 for c = 1:nChan
-
-    alignedData = interp1(inTS, inCdat.data(:,c), trigInterpTimes,'linear','extrap');
-    avgData = mean(alignedData,2);
-    trigCdat.data(:,c) = avgData;
-
+    chanData = inCdat.data(:,c);
+    alignedData = interp1(inTS, chanData', trigInterpTimes,'linear','extrap');
+    trigCdat.data(:,c) = mean(alignedData,2);
+    trigCdat.variange(:,c) = std(alignedData,2).^2;
 end
+
+
 
 trigCdat.tstart = trigTS(1);
 trigCdat.tend   = trigTS(end);

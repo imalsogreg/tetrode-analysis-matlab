@@ -4,5 +4,5 @@ r = r0;
 
 for n = 1:numel(xs)
   r1 = mapFn(xs{n});
-  r =  redFn(r0,r1);
+  r =  redFn(r,r1);
 end
