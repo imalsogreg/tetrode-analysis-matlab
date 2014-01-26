@@ -28,7 +28,7 @@ for c = 1:nChan
     chanData = inCdat.data(:,c);
     alignedData = interp1(inTS, chanData', trigInterpTimes,'linear','extrap');
     trigCdat.data(:,c) = mean(alignedData,2);
-    trigCdat.variange(:,c) = std(alignedData,2).^2;
+%    trigCdat.variange(:,c) = std(alignedData,2).^2;
 end
 
 

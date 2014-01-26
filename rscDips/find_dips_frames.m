@@ -9,7 +9,7 @@ opt = p.Results;
 
 dip_crit = seg_criterion('cutoff_value', opt.mean_rate_threshold,...
     'threshold_is_positive',false,...
-    'bridge_max_gap',0,'min_width_pre_bridge',0.03);
+    'bridge_max_gap',0.005,'min_width_pre_bridge',0.010);
 
 mua_mean = mua_rate;
 mua_mean.data = mean(double(mua_mean.data),2); % Somehow input data was single
