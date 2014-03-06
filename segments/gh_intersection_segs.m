@@ -10,6 +10,8 @@ p.addParamValue('draw',false);
 p.parse(varargin{:});
 opt = p.Results;
 
+s1 = reshape(s1,1,[]);
+s2 = reshape(s2,1,[]);
 
 ss = cellfun(@(x) lfun_intersect_all_against_one(s1, x), s2,'UniformOutput',false);
 

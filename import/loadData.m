@@ -20,7 +20,7 @@ dayOfWeek = m.today(3:4);
 d.epochs = loadMwlEpoch('filename',[m.basePath, '/epoch.epoch']);
 
 if(~m.checkedArteCorrectionFactor)
-    warning('loadDataGeneric:noCorrectionFactor',...
+    warning('loadData:noCorrectionFactor',...
         'Using an un-checked correction factor');
 end
 
