@@ -7,6 +7,7 @@ p.addParamValue('loadEEG',true);
 p.addParamValue('samplerate',1000);
 p.addParamValue('loadMUA',true);
 p.addParamValue('loadSpikes',true);
+p.addParamValue('computeFields',true);
 p.parse(varargin{:});
 
 if(isempty(p.Results.timewin))
@@ -25,12 +26,13 @@ if(~m.checkedArteCorrectionFactor)
 end
 
 if(p.Results.loadEEG)
-d.eeg = quick_eeg('timewin',timewin,...
- 'file1', m.f1File, 'f1_ind', m.f1Inds, 'f1_chanlabels', m.f1TrodeLabels, ...
- 'file2', m.f2File, 'f2_ind', m.f2Inds, 'f2_chanlabels', m.f2TrodeLabels, ...
- 'file3', m.f3File, 'f3_ind', m.f3Inds, 'f3_chanlabels', m.f3TrodeLabels, ...
- 'file4', m.f4File, 'f4_ind', m.f4Inds, 'f4_chanlabels', m.f4TrodeLabels, ...
- 'system_list',m.systemList,'sort_areas',true,'arte_correction_factor',m.arteCorrectionFactor,'samplerate',p.Results.samplerate);
+  eegArgs = lfun_args(m);
+  eegArgs = [eegArgs, 'timewin',timewin,...
+       'system_list',{m.systemList},'sort_areas',true,...
+      'arte_correction_factor',m.arteCorrectionFactor,...
+      'samplerate',p.Results.samplerate];
+  
+  d.eeg = quick_eeg(eegArgs{:});
 end
 
 if(p.Results.loadMUA)
@@ -56,7 +58,45 @@ if(p.Results.loadPos)
         'click_points',m.linearize_opts.click_points);
 end
 
+if(opt.computeFields)
+    [spikes,pos_info2,track_info2] = assign_field(d.spikes, d.pos_info, 'n_track_seg',100,'track_info',d.track_info);
+    d.spikes = spikes;
+    d.pos_info = pos_info2;
+    d.track_info = track_info2;
+end
+
 if(~m.checkedArteCorrectionFactor)
     warning('loadDataGeneric:uncheckedCorrectionFactor',...
         'This day''s correction factor hasn''t been checked');
+end
+
+end
+
+function a = lfun_args(m)
+  a = cell(0);
+  for i = 1:100 % TODO : Magic number is the upper bound 
+                % of eeg files we'll ever possibly encounter
+    a = [a,lfun_args_from_file_ind(m,i)];
+  end
+end
+
+function a = lfun_args_from_file_ind(m,i)
+  thisFilenameParam = ['f', num2str(i),'File'];
+  thisFileIndParam  = ['f', num2str(i),'Inds'];
+  thisFileChanlabelsParam = ['f', num2str(i),'TrodeLabels'];
+  if isfield(m,thisFilenameParam)
+    if isfield(m,thisFileIndParam) && isfield(m,thisFileChanlabelsParam)
+      thisFilenameName = ['file',num2str(i)];
+      thisFileIndName  = ['f',num2str(i),'_ind'];
+      thisFileChanlabelsName = ['f',num2str(i),'_chanlabels'];
+      a = {thisFilenameName, m.(thisFilenameParam), ...
+           thisFileIndName, m.(thisFileIndParam), ...
+           thisFileChanlabelsName, m.(thisFileChanlabelsParam)};
+    else
+      error('loadData:eegFieldInconsistencies',...
+            'metadata had eeg file filename but not ind or chanlabel info');
+    end
+  else
+    a = cell(0);
+  end
 end
