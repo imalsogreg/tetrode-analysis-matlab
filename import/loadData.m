@@ -9,6 +9,7 @@ p.addParamValue('loadMUA',true);
 p.addParamValue('loadSpikes',true);
 p.addParamValue('computeFields',true);
 p.parse(varargin{:});
+opt=p.Results;
 
 if(isempty(p.Results.timewin))
     timewin = m.loadTimewin;
