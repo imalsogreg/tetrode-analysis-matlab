@@ -9,6 +9,7 @@ p.addParamValue('loadMUA',true);
 p.addParamValue('loadSpikes',true);
 p.addParamValue('computeFields',true);
 p.parse(varargin{:});
+opt = p.Results;
 
 if(isempty(p.Results.timewin))
     timewin = m.loadTimewin;
@@ -25,6 +26,8 @@ if(~m.checkedArteCorrectionFactor)
         'Using an un-checked correction factor');
 end
 
+d.trode_groups = m.trode_groups_fn('date',m.today);
+
 if(p.Results.loadEEG)
   eegArgs = lfun_args(m);
   eegArgs = [eegArgs, 'timewin',timewin,...
@@ -33,6 +36,8 @@ if(p.Results.loadEEG)
       'samplerate',p.Results.samplerate];
   
   d.eeg = quick_eeg(eegArgs{:});
+
+  d.thetaChanInd = find(strcmp(m.singleThetaChan, d.eeg.chanlabels));
 end
 
 if(p.Results.loadMUA)
@@ -63,6 +68,9 @@ if(opt.computeFields)
     d.spikes = spikes;
     d.pos_info = pos_info2;
     d.track_info = track_info2;
+    if(isfield(m,'keep_list'))
+        d.spikes.clust = d.spikes.clust(m.keep_list);
+    end
 end
 
 if(~m.checkedArteCorrectionFactor)
