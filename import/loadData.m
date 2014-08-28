@@ -21,6 +21,8 @@ dayOfWeek = m.today(3:4);
 
 d.epochs = loadMwlEpoch('filename',[m.basePath, '/epoch.epoch']);
 
+d.trode_gorups = m.trode_groups;
+
 d.rat_conv_table = m.rat_conv_table;
 
 if(~m.checkedArteCorrectionFactor)
@@ -66,7 +68,8 @@ if(p.Results.loadPos)
 end
 
 if(opt.computeFields)
-    [spikes,pos_info2,track_info2] = assign_field(d.spikes, d.pos_info, 'n_track_seg',100,'track_info',d.track_info);
+    [spikes,pos_info2,track_info2] = assign_field(d.spikes, d.pos_info, ...
+        'n_track_seg',100,'smooth_sd_segs',2, 'track_info',d.track_info);
     d.spikes = spikes;
     d.pos_info = pos_info2;
     d.track_info = track_info2;
