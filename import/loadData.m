@@ -21,6 +21,8 @@ dayOfWeek = m.today(3:4);
 
 d.epochs = loadMwlEpoch('filename',[m.basePath, '/epoch.epoch']);
 
+d.rat_conv_table = m.rat_conv_table;
+
 if(~m.checkedArteCorrectionFactor)
     warning('loadData:noCorrectionFactor',...
         'Using an un-checked correction factor');
@@ -69,7 +71,9 @@ if(opt.computeFields)
     d.pos_info = pos_info2;
     d.track_info = track_info2;
     if(isfield(m,'keep_list'))
-        d.spikes.clust = d.spikes.clust(m.keep_list);
+        if(~isempty(m.keep_list))
+            d.spikes.clust = d.spikes.clust(m.keep_list);
+        end
     end
 end
 
