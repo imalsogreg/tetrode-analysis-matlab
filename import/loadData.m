@@ -21,7 +21,7 @@ dayOfWeek = m.today(3:4);
 
 d.epochs = loadMwlEpoch('filename',[m.basePath, '/epoch.epoch']);
 
-d.trode_gorups = m.trode_groups;
+d.trode_groups = m.trode_groups;
 
 d.rat_conv_table = m.rat_conv_table;
 
@@ -29,8 +29,6 @@ if(~m.checkedArteCorrectionFactor)
     warning('loadData:noCorrectionFactor',...
         'Using an un-checked correction factor');
 end
-
-d.trode_groups = m.trode_groups_fn('date',m.today);
 
 if(p.Results.loadEEG)
   eegArgs = lfun_args(m);
