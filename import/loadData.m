@@ -40,8 +40,14 @@ if(p.Results.loadEEG)
       'samplerate',p.Results.samplerate];
   
   d.eeg = quick_eeg(eegArgs{:});
-
+  if ~ischar(m.singleThetaChan)
+       error('laodData:badSingleThetaChan','singleThetaChan must be string');
+  end
   d.thetaChanInd = find(strcmp(m.singleThetaChan, d.eeg.chanlabels));
+  thetaCdat = contchans(d.eeg,'chans',d.thetaChanInd);
+  thetaCdatR = prep_eeg_for_regress(thetaCdat);
+  d.thetaRaw = thetaCdatR.raw;
+  d.theta    = thetaCdatR.theta;
 end
 
 if(p.Results.loadMUA)
