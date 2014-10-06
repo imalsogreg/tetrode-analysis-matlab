@@ -92,16 +92,20 @@ if(~m.checkedArteCorrectionFactor)
         'This day''s correction factor hasn''t been checked');
 end
 
-if(isfield(m.pairs))
-    if(m.linearize_opts.circular_track)
-        ok_directions = {'outbound'}
-    else
-        ok_directions = {'outbound','inbound'}
-    end
-        
-    [X_reg, y_reg, field_dists, anatomical_dists, xcorr_dists, field_cells, fields, xcorr_r, xcorr_mat, f] = ...
-        full_xcorr_analysis(d,m, varargin)
-end
+% % Nevermind.
+%if(isfield(m.pairs))
+%    if ~isfield(m.pairs.okPair)
+%        error('loadData:okPair_missing','please include field m.pairs.okPair = (e.g.) ''CA3,CA1'' in metadata');
+%    end
+%    if(m.linearize_opts.circular_track)
+%        ok_directions = {'outbound'};
+%    else
+%        ok_directions = {'outbound','inbound'};
+%    end
+%        
+%    [X_reg, y_reg, field_dists, anatomical_dists, xcorr_dists, field_cells, fields, xcorr_r, xcorr_mat, f] = ...
+%        full_xcorr_analysis(d,m, 'ok_directions',ok_directions)
+%end
     
 
 end
