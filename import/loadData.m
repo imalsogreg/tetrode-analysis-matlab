@@ -21,7 +21,7 @@ dayOfWeek = m.today(3:4);
 
 d.epochs = loadMwlEpoch('filename',[m.basePath, '/epoch.epoch']);
 
-d.trode_groups = m.trode_groups;
+d.trode_groups = m.trode_groups_fn('date',m.today);
 
 d.rat_conv_table = m.rat_conv_table;
 
@@ -89,16 +89,15 @@ if(~m.checkedArteCorrectionFactor)
         'This day''s correction factor hasn''t been checked');
 end
 
-if(isfield(m.pairs))
-    if(m.linearize_opts.circular_track)
-        ok_directions = {'outbound'}
-    else
-        ok_directions = {'outbound','inbound'}
-    end
-        
-    [X_reg, y_reg, field_dists, anatomical_dists, xcorr_dists, field_cells, fields, xcorr_r, xcorr_mat, f] = ...
-        full_xcorr_analysis(d,m, varargin)
-end
+%if(isfield(m,'pairs'))
+%    if(m.linearize_opts.circular_track)
+%        ok_directions = {'outbound'}
+%    else
+%        ok_directions = {'outbound','inbound'}
+%    end
+%    [X_reg, y_reg, field_dists, anatomical_dists, xcorr_dists, field_cells, fields, xcorr_r, xcorr_mat, f] = ...
+%        full_xcorr_analysis(d,m, varargin)
+%end
     
 
 end
