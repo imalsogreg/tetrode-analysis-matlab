@@ -61,14 +61,17 @@ d.spikes = imspike('spikes','arte_correction_factor',m.arteCorrectionFactor,...
 end
 
 if(p.Results.loadPos)
-    if isfield(m,'circular_track')
+    if isfield(m.linearize_opts,'circular_track')
         circ = m.linearize_opts.circular_track;
     else
         circ = false;
     end
     [d.pos_info,d.track_info,d.linearize_opts] = linearize_track(['l',dayOfWeek,'.p'],'timewin',d.epochs('run'),...
         'circular_track',circ, 'calibrate_length',m.linearize_opts.calibrate_length,'calibrate_points',m.linearize_opts.calibrate_points,...
-        'click_points',m.linearize_opts.click_points);
+        'click_points',m.linearize_opts.click_points,'circular_track',circ);
+    %[d.pos_info,d.track_info] = linearize_track(['l',dayOfWeek,'.p'],'linearize_opts',m.linearize_opts);
+    d.pos_info.lin_speed_cdat = d.pos_info.lin_vel_cdat;
+    d.pos_info.lin_speed_cdat.data = abs(d.pos_info.lin_speed_cdat.data);
 end
 
 if(opt.computeFields)
@@ -88,17 +91,6 @@ if(~m.checkedArteCorrectionFactor)
     warning('loadDataGeneric:uncheckedCorrectionFactor',...
         'This day''s correction factor hasn''t been checked');
 end
-
-%if(isfield(m,'pairs'))
-%    if(m.linearize_opts.circular_track)
-%        ok_directions = {'outbound'}
-%    else
-%        ok_directions = {'outbound','inbound'}
-%    end
-%    [X_reg, y_reg, field_dists, anatomical_dists, xcorr_dists, field_cells, fields, xcorr_r, xcorr_mat, f] = ...
-%        full_xcorr_analysis(d,m, varargin)
-%end
-    
 
 end
 
